@@ -196,7 +196,7 @@ class WeixinBase(object):
 
     def response_text(self, text):
         #msg = text.text
-        msg = self.proc_response(text)
+        msg = self.proc_response(text.tetx)
         replymsg = u"I can say:"+ msg
 			
         return Text(replymsg)
@@ -221,6 +221,7 @@ class WeixinBase(object):
 	    #text = self.getfromuser()
 	    return text
     def creater_msg(self, text):
+	    
 	    return text
 
     def responder_msg(self, text):
