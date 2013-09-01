@@ -217,7 +217,7 @@ class WeixinBase(object):
         return None
 
     def proc_response(self, text):
-        if text.startswith("创建"):
+        if text.startswith("Create "):
             text =self.creater_msg(text)
 	    #text = self.getfromuser()
         else:
@@ -225,7 +225,7 @@ class WeixinBase(object):
         return text
 
     def creater_msg(self, text):
-        activity_desc = text.lstrip(u"创建 ")
+        activity_desc = text.lstrip(u"Create ")
         activity_slug = randint(100,999)
         activity = Activity.objects.create(description=activity_desc,slug=activity_slug)
         activity.save()
@@ -235,7 +235,7 @@ class WeixinBase(object):
             for index, poll in enumerate(polls):
                 poll=Poll.objects.create(activity=activity, poll_id=index+1, poll_text=poll.split(":")[1], votes=0)
                 poll.save()
-        return "欢迎使用投票助手，请回复 #%s 选项 进行投票"%activity.slug + "%s"%text.lstrip("创建 ")
+        return "欢迎使用投票助手，请回复 #%s 选项 进行投票"%activity.slug + "%s"%text.lstrip("Create ")
         
 
     def responder_msg(self, text):
