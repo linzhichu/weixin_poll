@@ -1,10 +1,12 @@
 # -*- coding:utf-8 -*-
+import re
 from random import randint
 from django.shortcuts import render_to_response
 import urllib,urllib2,time,hashlib  
 from django.http import HttpResponse
 
 from polls.models import WexinInfo
+from polls.models import *
 
 TOKEN = "weixinpoll"
 
@@ -220,9 +222,19 @@ class WeixinBase(object):
 		    text =self.creater_msg(text)
 	    #text = self.getfromuser()
 	    return text
+
     def creater_msg(self, text):
-	    
-	    return text
+	    activity_desc = text.lstrip(u"创建 ")
+	    activity_slug = randint(100,999)
+	    activity = Activity.objects.create(description=activity_desc,slug=activity_slug)
+	    activity.save()
+	    poll_pattern = re.compile(r'\d+\:\S+')
+	    polls = re.findall(poll_pattern, text)
+	    if len(polls)>0:
+		    for index, poll in enumerate(polls):
+			    poll=Poll.objects.create(activity=activity, poll_id=index+1, poll_text=poll.split(":")[1], votes=0)
+			    poll.save()
+	    return "欢迎使用投票助手，请回复 #%s 选项 进行投票"%activity.slug + "%s"%text.lstrip("创建 ")
 
     def responder_msg(self, text):
 	    return text
