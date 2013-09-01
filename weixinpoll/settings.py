@@ -6,12 +6,14 @@ from os import environ
 
 DEBUG = True
 
-debug = not environ.get("APP_NAME",)
+# debug = not environ.get("APP_NAME",)
+debug = True
+
 if debug:
-    ENGINE = 'django.db.backends.sqlite3'
-    MYSQL_DB = 'weixinpoll.db'
-    MYSQL_USER = ''
-    MYSQL_PASS = ''
+    ENGINE = 'django.db.backends.mysql'
+    MYSQL_DB = 'weixinpoll'
+    MYSQL_USER = 'root'
+    MYSQL_PASS = 'root'
     MYSQL_HOST_M = ''
     MYSQL_HOST_S = ''
     MYSQL_PORT = ''

@@ -7,6 +7,7 @@ from views import home
 
 urlpatterns = patterns('',
 	url(r'^$',home),
+    url(r'^weixin/$',handleRequest),
     # Examples:
     # url(r'^$', 'th_back.views.home', name='home'),
     # url(r'^th_back/', include('th_back.foo.urls')),
