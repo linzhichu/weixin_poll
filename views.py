@@ -9,7 +9,7 @@ from polls.models import Poll, Activity
 TOKEN = "weixinpoll"
 
 def home(request):
-	return render_to_response('index.tpl',{})
+    return render_to_response('index.tpl',{})
 
 import xml.etree.ElementTree as ET  
 import urllib,urllib2,time,hashlib  
@@ -188,8 +188,8 @@ class WeixinBase(object):
             return None
 
     def response_subscribe(self):
-	    return Text('welcome')
-            pass
+        return Text('welcome')
+        pass
             
     def response_unsubscribe(self):
         pass
@@ -198,7 +198,7 @@ class WeixinBase(object):
         #msg = text.text
         msg = self.proc_response(text.text)
         replymsg = u"I can say:"+ msg
-			
+            
         return Text(replymsg)
 
     def response_music(self, music):
@@ -214,19 +214,20 @@ class WeixinBase(object):
         return None
 
     def proc_response(self, text):
-	    if text.startswith("#"):
-		    text = self.responder_msg(text)
-	    elif text.startswith("TouPiao:"):
-		    text =self.creater_msg(text)
-	    #text = self.getfromuser()
-	    return text
+        if text.startswith("TouPiao:"):  
+            text =self.creater_msg(text)
+        else :
+            text = self.responder_msg(text)
+
+        #text = self.getfromuser()
+        return text
     def creater_msg(self, text):
-	    
-	    return text
+        
+        return text
 
     def responder_msg(self, text):
         msg = text
-        r = re.compile(r'\#\s*(?P<slug>\d+)\s*(?P<poll_id>\d+)')
+        r = re.compile(r'\s*(?P<slug>\d+)\s*(?P<poll_id>\d+)')
         p = r.search(msg)
         pdict = p.groupdict()
         print pdict
@@ -234,7 +235,10 @@ class WeixinBase(object):
             activity = Activity.objects.get(slug=pdict['slug'])
         except Activity.DoesNotExist:
             return u"对不起，没有该活动!"
-        poll = Poll.objects.get(activity=activity,poll_id=int(pdict['poll_id']))
+        try :
+            poll = Poll.objects.get(activity=activity,poll_id=int(pdict['poll_id']))
+        except Poll.DoesNotExist:
+            return u"对不起，没有该选项!"
         poll.votes = poll.votes + 1
         poll.save()
         return u"投票成功，已经有%d个人投了%s.%s"%(poll.votes,pdict['poll_id'],poll.poll_text)
