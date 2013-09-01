@@ -3,8 +3,8 @@ from random import randint
 from django.shortcuts import render_to_response
 import urllib,urllib2,time,hashlib  
 from django.http import HttpResponse
-
-from polls.models import WexinInfo
+import re
+from polls.models import Poll, Activity
 
 TOKEN = "weixinpoll"
 
@@ -225,7 +225,19 @@ class WeixinBase(object):
 	    return text
 
     def responder_msg(self, text):
-	    return text
+        msg = text
+        r = re.compile(r'\#\s*(?P<slug>\d+)\s*(?P<poll_id>\d+)')
+        p = r.search(msg)
+        pdict = p.groupdict()
+        print pdict
+        try :
+            activity = Activity.objects.get(slug=pdict['slug'])
+        except Activity.DoesNotExist:
+            return u"对不起，没有该活动!"
+        poll = Poll.objects.get(activity=activity,poll_id=int(pdict['poll_id']))
+        poll.votes = poll.votes + 1
+        poll.save()
+        return u"投票成功，已经有%d个人投了%s.%s"%(poll.votes,pdict['poll_id'],poll.poll_text)
 
 def handleRequest(request, wxclass=WeixinBase):  
     if request.method == 'GET':
