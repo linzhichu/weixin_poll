@@ -152,6 +152,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
+    'polls',
     #'tastypie',
     #'south',
     # 'debug_toolbar',
