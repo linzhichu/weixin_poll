@@ -18,3 +18,7 @@ class WexinInfo(models.Model):
     timestamp = models.CharField(max_length=100)
     nonce = models.CharField(max_length=100)
     echostr = models.CharField(max_length=100)
+
+class WeixinUser(models.Model):
+    weixin_id = models.CharField(max_length=100)
+    subscript = models.BooleanField(default=False)
