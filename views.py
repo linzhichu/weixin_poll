@@ -1,4 +1,8 @@
 from django.shortcuts import render_to_response
+import urllib,urllib2,time,hashlib  
+from django.http import HttpResponse
+
+from polls.models import WexinInfo
 
 def home(request):
 	return render_to_response('index.tpl',{})
